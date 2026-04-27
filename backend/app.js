@@ -5,6 +5,7 @@ import authRoutes from './routes/authRoutes.js';
 import spareRoutes from './routes/spareRoutes.js';
 import spareInRoutes from './routes/spareInRoutes.js';
 import session from "express-session";
+import cors from 'cors';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use(session({
 }))
 
 app.use(express.json());
+app.use(cors());
 
 app.get('/', (req, res) => {
     res.status(200).json({
