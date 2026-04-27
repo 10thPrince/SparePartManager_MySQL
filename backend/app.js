@@ -2,7 +2,8 @@ import express from "express";
 import dotenv from 'dotenv';
 import { db } from "./config/db.js";
 import authRoutes from './routes/authRoutes.js';
-import spareRoutes from './routes/spareRoutes.js'
+import spareRoutes from './routes/spareRoutes.js';
+import spareInRoutes from './routes/spareInRoutes.js';
 import session from "express-session";
 
 dotenv.config();
@@ -33,6 +34,7 @@ app.get('/', (req, res) => {
 
 app.use('/auth', authRoutes);
 app.use('/spareparts', spareRoutes);
+app.use('/spareIn', spareInRoutes);
 
 app.listen(port, () => {
     console.log("App running on port", port)
