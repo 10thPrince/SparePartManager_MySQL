@@ -38,7 +38,6 @@ export const createSparePart = (req, res) => {
 
 export const getAllSpares = (req, res) => {
     try {
-
         const q = "SELECT * FROM spareparts";
         db.query(q, (err, result) => {
             if (err) {

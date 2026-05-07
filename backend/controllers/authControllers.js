@@ -144,3 +144,40 @@ export const logout = (req, res) => {
     }
 }
 
+export const getMe = (req, res) => {
+    try {
+        const id = req.session.user.id;
+
+        const q = 'SELECT UserId, UserName, Email FROM users WHERE UserId = ?';
+        db.query(q, [id], (err, result) => {
+            if (err) {
+                return res.status(400).json({
+                    success: false,
+                    Error: err
+                })
+            }
+
+            if(result.length === 0 ){
+                return res.status(404).json({
+                    success: false,
+                    message: "User Not Found"
+                })
+            }
+
+            if(result.length !== 0 ){
+                res.status(200).json({
+                    success: true,
+                    data: result
+                })
+            }
+
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "System Error",
+            data: error
+        })
+    }
+}   
+

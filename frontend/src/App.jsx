@@ -1,13 +1,23 @@
 import React from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Router, Routes } from 'react-router-dom'
+import Login from './pages/Login'
+import Dashboard from './pages/Dashboard'
+import ProtectedRoutes from './components/ProtectedRoutes'
 
 const App = () => {
   return (
     <>
+      <Routes>
 
-    <Routes>
-      
-    </Routes>
+
+        <Route path='/login' element={<Login />} />
+        
+        <Route element={<ProtectedRoutes />}>
+
+          <Route path='/dashboard' element={<Dashboard />} />
+        </Route>
+
+      </Routes>
 
     </>
   )
