@@ -4,6 +4,7 @@ import { db } from "./config/db.js";
 import authRoutes from './routes/authRoutes.js';
 import spareRoutes from './routes/spareRoutes.js';
 import spareInRoutes from './routes/spareInRoutes.js';
+import stockOutRoutes from './routes/stockOutRoutes.js';
 import session from "express-session";
 import cors from 'cors';
 
@@ -25,12 +26,19 @@ app.use(session({
 }))
 
 app.use(express.json());
+// app.use(cors({
+//     origin: "http://localhost:5173",
+//     credentials: true,
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+// }));
+
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:5174", "http://127.0.0.1:5174"],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-}));
+    allowedHeaders: ['Content-Type', 'Authorization']
+}))
 
 app.get('/', (req, res) => {
     res.status(200).json({
@@ -42,6 +50,8 @@ app.get('/', (req, res) => {
 app.use('/auth', authRoutes);
 app.use('/spareparts', spareRoutes);
 app.use('/spareIn', spareInRoutes);
+app.use('/spareOut', stockOutRoutes);
+app.use('/stockOut', stockOutRoutes);
 
 app.listen(port, () => {
     console.log("App running on port", port)

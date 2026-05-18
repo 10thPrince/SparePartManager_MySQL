@@ -1,36 +1,33 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { api } from '../axios/api'
-import { useAuth } from '../context/useAuth'
 
-const Login = () => {
+const Register = () => {
+    const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
+    const [success, setSuccess] = useState('')
     const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
-    const { login, isAuthenticated } = useAuth()
-
-    useEffect(() => {
-        if (isAuthenticated) {
-            navigate('/dashboard')
-        }
-    }, [isAuthenticated, navigate])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
 
         setError('')
+        setSuccess('')
         setLoading(true)
 
         try {
-            const res = await api.post('/auth/login', { email, password })
-            login()
-            alert(res.data?.message || 'Login successful')
-            navigate('/dashboard')
+            const res = await api.post('/auth/register', { name, email, password })
+            setSuccess(res.data?.message || 'Account created successfully')
+            setName('')
+            setEmail('')
+            setPassword('')
+            setTimeout(() => navigate('/login'), 800)
         } catch (err) {
-            setError(err.response?.data?.message || 'Invalid email or password')
+            setError(err.response?.data?.message || 'Unable to create account')
         } finally {
             setLoading(false)
         }
@@ -40,8 +37,8 @@ const Login = () => {
         <div className='min-h-screen bg-gray-200 flex items-center justify-center px-4'>
             <div className='w-full max-w-md border border-gray-400 bg-white flex flex-col gap-y-8 rounded-2xl p-6 shadow-sm'>
                 <div className='flex flex-col gap-y-2 px-3'>
-                    <h1 className='text-2xl font-bold'>Login To Access</h1>
-                    <p className='text-md font-semibold text-gray-600'>Welcome once again!</p>
+                    <h1 className='text-2xl font-bold'>Create Account</h1>
+                    <p className='text-md font-semibold text-gray-600'>Register to manage spare parts inventory.</p>
                 </div>
 
                 {error && (
@@ -50,7 +47,27 @@ const Login = () => {
                     </div>
                 )}
 
+                {success && (
+                    <div className='border border-green-500 bg-green-100 text-green-800 text-center py-2 rounded-xl'>
+                        {success}
+                    </div>
+                )}
+
                 <form onSubmit={handleSubmit} className='px-3 flex flex-col gap-y-4'>
+                    <div className='flex flex-col gap-y-2'>
+                        <label htmlFor='name' className='font-semibold'>Full Name</label>
+                        <input
+                            id='name'
+                            type='text'
+                            name='name'
+                            value={name}
+                            placeholder='Enter your full name'
+                            onChange={(e) => setName(e.target.value)}
+                            className='border px-4 py-2 rounded-xl'
+                            required
+                        />
+                    </div>
+
                     <div className='flex flex-col gap-y-2'>
                         <label htmlFor='email' className='font-semibold'>Email</label>
                         <input
@@ -72,7 +89,7 @@ const Login = () => {
                             type='password'
                             name='password'
                             value={password}
-                            placeholder='Enter your password'
+                            placeholder='Create a password'
                             onChange={(e) => setPassword(e.target.value)}
                             className='border px-4 py-2 rounded-xl'
                             required
@@ -85,11 +102,11 @@ const Login = () => {
                             className='bg-blue-500 w-full text-center py-2 rounded-xl text-white font-bold text-lg disabled:bg-blue-300'
                             disabled={loading}
                         >
-                            {loading ? 'Loading...' : 'Submit'}
+                            {loading ? 'Creating...' : 'Register'}
                         </button>
 
                         <p className='text-sm text-center'>
-                            New Here? <Link to='/register' className='underline text-blue-500'>Register</Link>
+                            Already have an account? <Link to='/login' className='underline text-blue-500'>Login</Link>
                         </p>
                     </div>
                 </form>
@@ -98,4 +115,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default Register
